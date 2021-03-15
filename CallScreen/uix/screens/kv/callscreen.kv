@@ -1,0 +1,33 @@
+#:kivy 2.0
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import colors kivymd.color_definitions.colors
+#:import effect kivy.uix.effectwidget.EffectWidget
+#:import HorizontalBlurEffect kivy.uix.effectwidget.HorizontalBlurEffect
+#:import VerticalBlurEffect kivy.uix.effectwidget.VerticalBlurEffect
+
+<CallScreen>
+
+    EffectWidget:
+        effects:
+            (\
+            HorizontalBlurEffect(size=root.blur_value), \
+            VerticalBlurEffect(size=root.blur_value), \
+            )
+
+        FitImage:
+            id: title_image
+            size_hint_y: .45
+            y: root.height - self.height
+            source: "data/images/avatar.jpg"
+
+
+    MDFloatingActionButton:
+        icon: "phone"
+        x: root.width - self.width - dp(20)
+        y: root.height * 45 / 100 + self.height / 2
+        md_bg_color: get_color_from_hex(colors["Green"]["A700"])
+        on_release:
+            root.animation_title_image(title_image); \
+            root.animation_blur_value(); \
+            root.open_call_box = True if not root.open_call_box else False
+            root.animation_call_button(self);
