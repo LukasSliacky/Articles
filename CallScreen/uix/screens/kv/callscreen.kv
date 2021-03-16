@@ -4,6 +4,80 @@
 #:import effect kivy.uix.effectwidget.EffectWidget
 #:import HorizontalBlurEffect kivy.uix.effectwidget.HorizontalBlurEffect
 #:import VerticalBlurEffect kivy.uix.effectwidget.VerticalBlurEffect
+#:import STANDARD_INCREMENT kivymd.material_resources.STANDARD_INCREMENT
+#:import IconLeftWidget kivymd.uix.list.IconLeftWidget
+
+<CallBoxButton@MDBoxLayout>
+    orientation: "vertical"
+    adaptive_size: True
+    spacing: "8dp"
+    icon: ""
+    text: ""
+
+    MDIconButton:
+        icon: root.icon
+        theme_text_color: "Custom"
+        text_color: 1, 1, 1, 1
+
+        canvas:
+            Color:
+                rgba: 1, 1, 1, 1
+            Line:
+                width: 1
+                circle:
+                    (\
+                    self.center_x, \
+                    self.center_y, \
+                    min(self.width, self.height) / 2, \
+                    0, \
+                    360, \
+                    )
+
+    MDLabel:
+        text: root.text
+        size_hint_y: None
+        height: self.texture_size[1]
+        font_style: "Caption"
+        halign: "center"
+        theme_text_color: "Custom"
+        text_color: 1, 1, 1, 1
+
+
+<CallBox@MDGridLayout>
+    cols: 3
+    rows: 2
+    adaptive_size: True
+    spacing: "24dp"
+
+    CallBoxButton:
+        icon: "microphone-off"
+        text: "Mute"
+    CallBoxButton:
+        icon: "volume-high"
+        text: "Speaker"
+    CallBoxButton:
+        icon: "dialpad"
+        text: "Keypad"
+
+    CallBoxButton:
+        icon: "plus-circle"
+        text: "Add call"
+    CallBoxButton:
+        icon: "call-missed"
+        text: "Transfer"
+    CallBoxButton:
+        icon: "account"
+        text: "Contact"
+
+
+<ItemList@TwoLineAvatarListItem>
+    icon: ""
+    font_style: "Caption"
+    secondary_font_style: "Caption"
+    height: STANDARD_INCREMENT
+
+    IconLeftWidget:
+        icon: root.icon
 
 <CallScreen>
 
@@ -20,6 +94,62 @@
             y: root.height - self.height
             source: "data/images/avatar.jpg"
 
+    MDToolbar:
+        y: root.height - self.height - dp(20)
+        md_bg_color: 0, 0, 0, 0
+        opposite_colors: True
+        title: "Profile"
+        left_action_items:  [["menu", lambda x: x]]
+        right_action_items: [["dots-vertical", lambda x: x]]
+
+
+    MDFloatLayout:
+        id: round_avatar
+        size_hint: None, None
+        size: "105dp", "105dp"
+        md_bg_color: 1, 1, 1, 1
+        radius: [self.height / 2,]
+        y: root.height * 45 / 100 + self.height
+        x: root.center_x - (self.width + user_name.width + dp(20)) / 2
+
+        FitImage:
+            size_hint: None, None
+            size: "100dp", "100dp"
+            mipmap: True
+            source: "data/images/round-avatar.png"
+            radius: [self.height / 2,]
+            pos_hint: {"center_x": .5, "center_y": .5}
+            mipmap: True
+
+    MDLabel:
+        id: user_name
+        text: "Irene"
+        font_style: "H3"
+        bold: True
+        size_hint: None, None
+        -text_size: None, None
+        size: self.texture_size
+        theme_text_color: "Custom"
+        text_color: 1, 1, 1, 1
+        y: round_avatar.y + self.height / 2
+        x: round_avatar.x + round_avatar.width + dp(20)
+
+
+    MDBoxLayout:
+        id: list_box
+        orientation: "vertical"
+        adaptive_height: True
+        y: root.height * 45 / 100 - self.height / 2
+
+        ItemList:
+            icon: "phone"
+            text: "Phone"
+            secondary_text: "123 456 789"
+
+        ItemList:
+            icon: "mail"
+            text: "Email"
+            secondary_text: "kivydevelopment@gmail.com"
 
     MDFloatingActionButton:
         icon: "phone"
@@ -30,4 +160,14 @@
             root.animation_title_image(title_image); \
             root.animation_blur_value(); \
             root.open_call_box = True if not root.open_call_box else False
-            root.animation_call_button(self);
+            root.animation_call_button(self); \
+            root.animation_round_avatar(round_avatar, user_name); \
+            root.animation_user_name(round_avatar, user_name); \
+            root.animation_call_box(call_box, user_name); \
+            root.animation_list_box(list_box);
+
+    CallBox:
+        id: call_box
+        pos_hint: {"center_x": .5}
+        y: -self.height
+        opacity: 0
