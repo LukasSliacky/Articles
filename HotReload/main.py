@@ -4,19 +4,27 @@ from kaki.app import App
 from kivy.core.window import Window
 
 from manager_screens import ManagerScreens
+'''
+Pozor, na to, aby Kaki spolupracoval s kivymd je potrebne upravit v subore:
 
+venv/lib/python3.8/site-packages/kaki/app.py
+
+Zmenit:
+from kivy.app import App as BaseApp
+na
+from kivymd.app import MDApp as BaseApp
+
+'''
 
 class Live(App):
 
     KV_FILES = {
-        # os.path.join(os.getcwd(), "manager_screens.kv"),
-        os.path.join(os.getcwd(), "HotReload", "manager_screens.kv"),
-        os.path.join(os.getcwd(), "HotReload", "login_screen.kv"),
+        os.path.join(os.getcwd(), "manager_screens.kv"),
+        os.path.join(os.getcwd(), "login_screen.kv"),
     }
 
     CLASSES = {
-        "LoginScreen": "login_screen",
-        "ManagerScreens": "manager_screens"
+        "LoginScreen": "login_screen"
     }
 
     AUTORELOADER_PATHS = [
